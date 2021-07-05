@@ -63,6 +63,7 @@ class CheckMail:
         if self.minutes >= RENEW_SESSION:
             logging.info("renewing session...")
             server.logout()
+            server = IMAPClient(host=HOSTNAME, use_uid=True, ssl=True)
             server.login(USERNAME, PASSWORD)
             logging.info("session renewed")
             self.then = self.now
@@ -136,3 +137,6 @@ if __name__ == '__main__':
         except Exception as e:
             logging.info("Exception:")
             logging.info(e)
+            server = IMAPClient(host=HOSTNAME, use_uid=True, ssl=True)
+            server.login(USERNAME, PASSWORD)
+            checkmail = CheckMail(datetime.now())
