@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  checkmail:
+    image: checkmail
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - "/mnt/media/logs":"/app/logs"
