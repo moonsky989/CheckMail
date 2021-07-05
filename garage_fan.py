@@ -31,7 +31,9 @@ class SwitchRun:
 
         # stop fan
         device.off()
-        Path(self.status_file).unlink()
+        file = Path(self.status_file)
+        if file.is_file():
+            file.unlink()
         log.info("run - fan off")
 
     def stop(self):

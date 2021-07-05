@@ -37,7 +37,7 @@ class CheckMail:
         self.update_time()
 
         # every RENEW_SESSION minutes logout and login to renew session
-        self.renew_session(server)
+        server = self.renew_session(server)
 
         # number of messages in inbox
         select_info = server.select_folder(MAILBOX)
@@ -59,7 +59,7 @@ class CheckMail:
 
         time.sleep(MAIL_CHECK_FREQ)
 
-    def renew_session(self, server: IMAPClient) -> None:
+    def renew_session(self, server: IMAPClient) -> IMAPClient:
         if self.minutes >= RENEW_SESSION:
             logging.info("renewing session...")
             server.logout()
@@ -67,6 +67,7 @@ class CheckMail:
             server.login(USERNAME, PASSWORD)
             logging.info("session renewed")
             self.then = self.now
+        return server
     
     def update_time(self):
         self.now = datetime.now()
@@ -116,7 +117,7 @@ class CheckMail:
         if file.is_file():
             file_time = datetime.fromtimestamp(file.stat().st_ctime)
             on_for = datetime.now() - file_time
-            logging.info("garage fan on for = " + str(on_for.total_seconds()) + " seconds")
+            logging.info("garage fan on for " + str(on_for.total_seconds()) + " seconds")
             if on_for.total_seconds() > (FAN_RUN_TIME*60):
                 print("stopping garage fan")
                 logging.info("stopping garage fan")
